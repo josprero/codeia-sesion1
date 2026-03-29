@@ -2,11 +2,15 @@ import { Movie } from '../types/tmdb';
 
 interface Props {
   movie: Movie;
+  onClick?: () => void;
 }
 
-export default function MovieCard({ movie }: Props) {
+export default function MovieCard({ movie, onClick }: Props) {
   return (
-    <article className="group relative overflow-hidden rounded-lg border border-slate-700 bg-slate-900 text-left shadow-lg transition-all hover:-translate-y-1 hover:border-primary">
+    <article
+      onClick={onClick}
+      className="group relative overflow-hidden rounded-lg border border-slate-700 bg-slate-900 text-left shadow-lg transition-all hover:-translate-y-1 hover:border-primary cursor-pointer"
+    >
       <img
         src={movie.poster}
         alt={movie.title}

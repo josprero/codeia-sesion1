@@ -1,4 +1,4 @@
-import { TmdbListResponse, TmdbMovieResponse } from '../types/tmdb';
+import { TmdbListResponse, TmdbMovieResponse, CastMember, Video, Review, WatchProviderResult } from '../types/tmdb';
 
 const BASE_URL = import.meta.env.VITE_TMDB_BASE_URL || 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY || '';
@@ -45,3 +45,28 @@ export const searchMovies = (query: string, page = 1) => request<TmdbListRespons
 export const fetchMovieById = (id: number) => request<TmdbMovieResponse>(`/movie/${id}`);
 
 export const fetchTVById = (id: number) => request<TmdbMovieResponse>(`/tv/${id}`);
+
+export const fetchNowPlaying = (page = 1) => request<TmdbListResponse>('/movie/now_playing', { page });
+
+export const fetchTopRated = (page = 1) => request<TmdbListResponse>('/movie/top_rated', { page });
+
+export const fetchByGenre = (genreId: number, page = 1) =>
+  request<TmdbListResponse>('/discover/movie', { with_genres: genreId, page, sort_by: 'popularity.desc' });
+
+export const fetchByYear = (year: number, page = 1) =>
+  request<TmdbListResponse>('/discover/movie', { primary_release_year: year, page, sort_by: 'popularity.desc' });
+
+export const fetchMovieCredits = (id: number) =>
+  request<{ cast: CastMember[] }>(`/movie/${id}/credits`);
+
+export const fetchMovieVideos = (id: number) =>
+  request<{ results: Video[] }>(`/movie/${id}/videos`, { language: 'en-US' });
+
+export const fetchMovieWatchProviders = (id: number) =>
+  request<{ results: Record<string, WatchProviderResult> }>(`/movie/${id}/watch/providers`);
+
+export const fetchMovieReviews = (id: number) =>
+  request<{ results: Review[] }>(`/movie/${id}/reviews`);
+
+export const fetchMovieRecommendations = (id: number) =>
+  request<TmdbListResponse>(`/movie/${id}/recommendations`);

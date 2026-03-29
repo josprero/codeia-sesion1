@@ -1,6 +1,7 @@
 import { Movie, TmdbMovieResponse } from '../types/tmdb';
 
 const IMG_BASE = import.meta.env.VITE_TMDB_IMG_BASE || 'https://image.tmdb.org/t/p/w500';
+const IMG_BACKDROP = 'https://image.tmdb.org/t/p/w1280';
 
 const genreMap: Record<number, string> = {
   28: 'Action',
@@ -36,6 +37,11 @@ const toPoster = (path?: string | null): string => {
   return `${IMG_BASE}${path}`;
 };
 
+const toBackdrop = (path?: string | null): string => {
+  if (!path) return '';
+  return `${IMG_BACKDROP}${path}`;
+};
+
 const toGenres = (ids?: number[]): string[] => {
   if (!Array.isArray(ids)) return [];
   return ids.map((id) => genreMap[id] || 'Unknown');
@@ -46,7 +52,9 @@ export const normalizeMovie = (input: TmdbMovieResponse): Movie => ({
   title: input.title || input.name || 'Untitled',
   overview: input.overview?.trim() || 'Descripción no disponible',
   poster: toPoster(input.poster_path),
+  backdrop: toBackdrop(input.backdrop_path),
   year: toYear(input),
   genres: toGenres(input.genre_ids),
   rating: Number((input.vote_average ?? 0).toFixed(1)),
+  runtime: input.runtime ?? undefined,
 });
